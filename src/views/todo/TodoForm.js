@@ -1,28 +1,26 @@
-import React, { useState, useEffect } from 'react'
-import { FormControl, Input, Icon, IconButton } from 'native-base'
-import IconFA from 'react-native-vector-icons/FontAwesome';
-import IconAn from 'react-native-vector-icons/AntDesign';
-import IconFe from 'react-native-vector-icons/Feather';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import IconButton from '../../components/IconButton';
 
 export default function TodoForm(props) {
-   const [todo, setTodo] = useState('')
+   const [todo, setTodo] = useState('');
 
    useEffect(() => {
       if (props.action === 'edit' && props.todo) {
-         setTodo(props.todo)
+         setTodo(props.todo);
       } else if (props.action === 'add') {
-         setTodo('')
+         setTodo('');
       }
-   }, [props.todo, props.action])
+   }, [props.todo, props.action]);
 
    const submit = () => {
       if (!validEmptyInput(todo)) {
          if (props.action === 'add') {
-            props.addTodoToList(todo)
+            props.addTodoToList(todo);
          } else {
-            props.updateTodo(todo)
+            props.updateTodo(todo);
          }
-         setTodo('')
+         setTodo('');
       }
    }
 
@@ -37,35 +35,57 @@ export default function TodoForm(props) {
    }
 
    const cancelUpdate = () => {
-      props.cancelUpdate()
-      setTodo('')
+      props.cancelUpdate();
+      setTodo('');
    }
+
    return (
-      <FormControl>
-         <Input
+      <View style={styles.container}>
+         <TextInput
             value={todo}
             onChangeText={(e) => setTodo(e)}
-            variant="filled"
-            InputRightElement={
-               props.action === 'add' ? (
-                  <IconButton 
-                     icon={<Icon size='md' color='emerald.400' as={<IconFA name='plus' />} />}
-                     onPress={submit}
-                  />
-               ) : (
-                  <>
-                     <IconButton 
-                        icon={<Icon size='md' color='#5FC5FF' as={<IconFe name='edit-3' />} />}
-                        onPress={submit}
-                     />
-                     <IconButton
-                        icon={<Icon size='md' color='red' as={<IconAn name='back' />} />}
-                        onPress={cancelUpdate}
-                     />
-                  </>
-               )
-            }
+            style={styles.input}
+            placeholder='Enter your task'
          />
-      </FormControl>
+         <View style={[styles.buttonSection, { flex: props.action === 'add' ? 2 : 3 }]}>
+            {props.action === 'add' ? (
+               <IconButton onPress={submit} iconName='plus-circle' iconStyle={styles.iconAdd} />
+            ) : (
+               <>
+                  <IconButton onPress={submit} iconName='edit' iconStyle={[styles.iconEdit, { marginTop: 3, fontSize: 32 }]} />
+                  <IconButton onPress={cancelUpdate} iconName='window-close' iconStyle={styles.iconClose} />
+               </>
+            )}
+         </View>
+      </View>
    );
-}
+};
+
+const styles = StyleSheet.create({
+   container: {
+      borderWidth: 1,
+      borderColor: 'gray',
+      borderRadius: 10,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 15,
+   },
+   input: {
+      fontSize: 16,
+      flex: 7
+   },
+   iconAdd: {
+      color: '#66D57F',
+   },
+   iconEdit: {
+      color: '#74DAEF',
+   },
+   iconClose: {
+      color: 'red',
+   },
+   buttonSection: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+   },
+});

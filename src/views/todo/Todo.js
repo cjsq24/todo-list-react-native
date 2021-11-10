@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Heading, Center, NativeBaseProvider, VStack } from 'native-base';
+import { StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TodoForm from './TodoForm';
 import TodoList from './TodoList';
@@ -13,7 +13,7 @@ export default function Todo() {
 
    const setTodoLocal = async (newTodoList) => {
       try {
-         await AsyncStorage.setItem('cs_todo_list', JSON.stringify(newTodoList))
+         AsyncStorage.setItem('cs_todo_list', JSON.stringify(newTodoList));
       } catch (e) {
          console.log(e)
       }
@@ -94,29 +94,29 @@ export default function Todo() {
    }
 
    return (
-      <NativeBaseProvider>
-         <Center flex={1} style={{ backgroundColor: 'white' }}>
-            <VStack space={4} flex={1} w="90%" mt={4}>
-               <Heading color="emerald.400">
-                  My To-Do List
-               </Heading>
-               <TodoForm
-                  addTodoToList={addTodoToList}
-                  action={action}
-                  todoUpdate={todoUpdate}
-                  updateTodo={updateTodo}
-                  todo={todoUpdate.title}
-                  cancelUpdate={cancelUpdate}
-               />
-               <TodoList
-                  todoList={todoList}
-                  goUpdateTodo={goUpdateTodo}
-                  deleteTodo={deleteTodo}
-                  checkUncheckTodo={checkUncheckTodo}
-                  loading={loading}
-               />
-            </VStack>
-         </Center>
-      </NativeBaseProvider>
+      <View style={styles.container}>
+         <TodoForm
+            addTodoToList={addTodoToList}
+            action={action}
+            todoUpdate={todoUpdate}
+            updateTodo={updateTodo}
+            todo={todoUpdate.title}
+            cancelUpdate={cancelUpdate}
+         />
+         <TodoList
+            todoList={todoList}
+            goUpdateTodo={goUpdateTodo}
+            deleteTodo={deleteTodo}
+            checkUncheckTodo={checkUncheckTodo}
+            loading={loading}
+         />
+      </View>
    );
 }
+
+const styles = StyleSheet.create({
+   container: {
+      paddingVertical: 20,
+      paddingHorizontal: 15,
+   }
+});
